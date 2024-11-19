@@ -26,11 +26,11 @@ int RPN::calculate(const std::string& expression)
     std::string token;
 
     while (iss >> token) {
-        if (isdigit(token[0])) {  // 数字の場合
+        if (isdigit(token[0])) {
             stack.push(std::atoi(token.c_str()));
         } 
         else if (isOperator(token)) 
-        {  // 演算子の場合
+        {
             if (stack.size() < 2) 
                 throw std::runtime_error("Error: insufficient values.");
             int b = stack.top(); stack.pop();

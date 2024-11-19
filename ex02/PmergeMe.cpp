@@ -5,12 +5,12 @@
 PmergeMe::PmergeMe() {}
 PmergeMe::~PmergeMe() {}
 
-// Ford-Johnsonソートの実装
+// Ford-Johnsonソート
 template <typename Container>
 void PmergeMe::fordJohnsonSort(Container &container) {
     if (container.size() <= 1) return;
 
-    Container pairs;
+    Container small, large;
     typename Container::iterator it = container.begin();
 
     // ペアを作成してソート
@@ -19,24 +19,34 @@ void PmergeMe::fordJohnsonSort(Container &container) {
         typename Container::value_type second = (it != container.end()) ? *it++ : first;
 
         if (first > second) std::swap(first, second);
-        pairs.push_back(first);
-        pairs.push_back(second);
+        small.push_back(first);
+        large.push_back(second);
     }
 
-    // 再帰的に小さい値をソート
-    Container smaller;
-    for (size_t i = 0; i < pairs.size(); i += 2) {
-        smaller.push_back(pairs[i]);
-    }
-    fordJohnsonSort(smaller);
+    // 再帰的にソート
+    fordJohnsonSort(small);
+    fordJohnsonSort(large);
 
-    // 大きい値を挿入
-    for (size_t i = 1; i < pairs.size(); i += 2) {
-        typename Container::iterator pos = std::upper_bound(smaller.begin(), smaller.end(), pairs[i]);
-        smaller.insert(pos, pairs[i]);
+    // マージ
+    container.clear();
+    typename Container::iterator itSmall = small.begin();
+    typename Container::iterator itLarge = large.begin();
+
+    while (itSmall != small.end() && itLarge != large.end()) {
+        if (*itSmall < *itLarge) {
+            container.push_back(*itSmall++);
+        } else {
+            container.push_back(*itLarge++);
+        }
     }
 
-    container = smaller;
+    while (itSmall != small.end()) {
+        container.push_back(*itSmall++);
+    }
+
+    while (itLarge != large.end()) {
+        container.push_back(*itLarge++);
+    }
 }
 
 // vector用のソート

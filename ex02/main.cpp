@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <deque>
-#include <ctime> // C++98の時間計測用ヘッダ
+#include <ctime>
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -15,7 +15,6 @@ int main(int argc, char **argv) {
         std::vector<int> vecInput;
         std::deque<int> deqInput;
 
-        // 入力を検証し、正の整数をコンテナに格納
         for (int i = 1; i < argc; ++i) {
             int num = std::atoi(argv[i]);
             if (num <= 0) {
@@ -25,7 +24,6 @@ int main(int argc, char **argv) {
             deqInput.push_back(num);
         }
 
-        // PmergeMeクラスのインスタンスを作成
         PmergeMe sorter;
 
         // vectorソートの時間測定
@@ -38,9 +36,8 @@ int main(int argc, char **argv) {
         start = std::clock();
         sorter.sortDeque(deqInput);
         end = std::clock();
-        double dequeDuration = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1e6; // マイクロ秒
+        double dequeDuration = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1e6;
 
-        // 結果の表示
         std::cout << "Before: ";
         for (size_t i = 0; i < vecInput.size(); ++i) {
             std::cout << vecInput[i] << " ";
