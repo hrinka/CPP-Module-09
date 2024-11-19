@@ -1,6 +1,5 @@
 #include "PmergeMe.hpp"
 #include <iostream>
-#include <chrono>
 
 PmergeMe::PmergeMe() {}
 PmergeMe::~PmergeMe() {}

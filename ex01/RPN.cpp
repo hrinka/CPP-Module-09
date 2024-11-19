@@ -21,6 +21,11 @@ int RPN::applyOperator(const std::string& op, int a, int b)
 
 int RPN::calculate(const std::string& expression) 
 {
+    // 入力文字列にスペースが含まれているかをチェック
+    if (expression.find(' ') == std::string::npos) {
+        throw std::runtime_error("Error: input must contain spaces between numbers and operators.");
+    }
+
     std::stack<int> stack;
     std::istringstream iss(expression);
     std::string token;

@@ -81,6 +81,11 @@ void BitcoinExchange::processInput(const std::string& inputFile) const {
     }
 
     std::string line;
+    // 1行目を読み飛ばす
+    if (!std::getline(file, line)) {
+        std::cerr << "Error: could not read the first line." << std::endl;
+        return;
+    }
     while (std::getline(file, line)) {
         std::istringstream ss(line);
         std::string date, separator, valueStr;
