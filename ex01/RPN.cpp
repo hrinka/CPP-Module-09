@@ -1,5 +1,7 @@
 #include "RPN.hpp"
 #include <iostream>
+#include <cstdlib>
+
 
 bool RPN::isOperator(const std::string& token)
 {
@@ -31,7 +33,7 @@ int RPN::calculate(const std::string& expression)
 
     while (iss >> token) {
         if (token.size() == 1 && isdigit(token[0])) {
-            stack.push(std::atoi(token.c_str()));
+            stack.push(atoi(token.c_str()));
         } 
         else if (isOperator(token)) 
         {
