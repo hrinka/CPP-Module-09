@@ -4,6 +4,17 @@
 PmergeMe::PmergeMe() {}
 PmergeMe::~PmergeMe() {}
 
+PmergeMe::PmergeMe(const PmergeMe& other)
+    : sortedVector(other.sortedVector), sortedDeque(other.sortedDeque) {}
+
+PmergeMe& PmergeMe::operator=(const PmergeMe& other) {
+    if (this != &other) {
+        sortedVector = other.sortedVector;
+        sortedDeque = other.sortedDeque;
+    }
+    return *this;
+}
+
 // Ford-Johnsonソート
 template <typename Container>
 void PmergeMe::fordJohnsonSort(Container &container) {

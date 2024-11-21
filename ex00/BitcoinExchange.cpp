@@ -9,7 +9,7 @@ BitcoinExchange::~BitcoinExchange() {}
 void BitcoinExchange::loadDatabase(const std::string& databaseFile) {
     std::ifstream file(databaseFile.c_str());
     if (!file.is_open()) {
-        std::cerr << "Error: could not open file." << std::endl;
+        std::cout << "Error: could not open file." << std::endl;
         exit(1);
     }
 
@@ -63,11 +63,11 @@ bool BitcoinExchange::isValidValue(const std::string& valueStr, float& value) co
         return false;
     }
     if (value < 0){
-        std::cerr << "Error: not a positive number." << std::endl;
+        std::cout << "Error: not a positive number." << std::endl;
         return false;
     }
     if (value > 1000) {
-        std::cerr << "Error: too large a number." << std::endl;
+        std::cout << "Error: too large a number." << std::endl;
         return false;
     }
     return true;
@@ -76,14 +76,14 @@ bool BitcoinExchange::isValidValue(const std::string& valueStr, float& value) co
 void BitcoinExchange::processInput(const std::string& inputFile) const {
     std::ifstream file(inputFile.c_str());
     if (!file.is_open()) {
-        std::cerr << "Error: could not open file." << std::endl;
+        std::cout << "Error: could not open file." << std::endl;
         return;
     }
 
     std::string line;
     // 1行目を読み飛ばす
     if (!std::getline(file, line)) {
-        std::cerr << "Error: could not read the first line." << std::endl;
+        std::cout << "Error: could not read the first line." << std::endl;
         return;
     }
     while (std::getline(file, line)) {
@@ -92,7 +92,7 @@ void BitcoinExchange::processInput(const std::string& inputFile) const {
         float value;
 
         if (!(std::getline(ss, date, '|') && ss >> valueStr)) {
-            std::cerr << "Error: bad input => " << line << std::endl;
+            std::cout << "Error: bad input => " << line << std::endl;
             continue;
         }
 
@@ -100,7 +100,7 @@ void BitcoinExchange::processInput(const std::string& inputFile) const {
         valueStr = valueStr.substr(valueStr.find_first_not_of(" "));
 
         if (!isValidDate(date)) {
-            std::cerr << "Error: bad input => " << line << std::endl;
+            std::cout << "Error: bad input => " << line << std::endl;
             continue;
         }
 
@@ -110,7 +110,7 @@ void BitcoinExchange::processInput(const std::string& inputFile) const {
 
         float rate = getExchangeRate(date);
         if (rate < 0) {
-            std::cerr << "Error: date not found => " << date << std::endl;
+            std::cout << "Error: date not found => " << date << std::endl;
         } else {
             std::cout << date << " => " << value << " = " << value * rate << std::endl;
         }

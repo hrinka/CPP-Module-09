@@ -12,6 +12,8 @@ class PmergeMe {
 public:
     PmergeMe();
     ~PmergeMe();
+    PmergeMe(const PmergeMe& other);
+    PmergeMe& operator=(const PmergeMe& other);
 
     void sortVector(const std::vector<int> &input);
     void sortDeque(const std::deque<int> &input);

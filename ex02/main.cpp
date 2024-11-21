@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        std::cerr << "Usage: ./PmergeMe <positive integers>" << std::endl;
+        std::cout << "Usage: ./PmergeMe <positive integers>" << std::endl;
         return 1;
     }
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
         std::cout << "Time to process with std::deque: " << dequeDuration << " us" << std::endl;
 
     } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cout << e.what() << std::endl;
         return 1;
     }
 
