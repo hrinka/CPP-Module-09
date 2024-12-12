@@ -21,12 +21,20 @@ public:
     std::vector<int> getSortedVector() const;
     std::deque<int> getSortedDeque() const;
 
+    
+
 private:
     std::vector<int> sortedVector;
     std::deque<int> sortedDeque;
 
+    std::vector<size_t> generateJacobstahl(size_t n) const;
+
     template <typename Container>
     void fordJohnsonSort(Container &container);
+
+    template <typename Container, typename T>
+    typename Container::iterator insertionPosition(Container &c, const T &val);
+
 };
 
 #endif  
