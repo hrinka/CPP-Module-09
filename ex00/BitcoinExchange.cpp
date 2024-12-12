@@ -58,11 +58,17 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
 }
 
 bool BitcoinExchange::isValidValue(const std::string& valueStr, float& value) const {
-    std::istringstream ss(valueStr);
-    if (!(ss >> value)) {
+    char* endPtr;
+    const char* str = valueStr.c_str();
+    value = std::strtof(str, &endPtr);
+
+    // strtofの結果が不正な場合や、全ての文字を消費していない場合
+    if (*endPtr != '\0' || endPtr == str) {
+        std::cout << "Error: invalid number format => " << valueStr << std::endl;
         return false;
     }
-    if (value < 0){
+
+    if (value < 0) {
         std::cout << "Error: not a positive number." << std::endl;
         return false;
     }
@@ -70,6 +76,7 @@ bool BitcoinExchange::isValidValue(const std::string& valueStr, float& value) co
         std::cout << "Error: too large a number." << std::endl;
         return false;
     }
+
     return true;
 }
 
