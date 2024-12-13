@@ -1,7 +1,7 @@
 #include "PmergeMe.hpp"
 #include <iostream>
-#include <algorithm> // for std::lower_bound
-#include <cstddef>   // for size_t
+#include <algorithm> 
+#include <cstddef>  
 
 PmergeMe::PmergeMe() {}
 PmergeMe::~PmergeMe() {}
@@ -28,7 +28,6 @@ void PmergeMe::sortDeque(const std::deque<int> &input) {
     fordJohnsonSort(sortedDeque);
 }
 
-// Jacobstahl数列を生成 
 std::vector<size_t> PmergeMe::generateJacobstahl(size_t n) const {
     std::vector<size_t> J;
     J.push_back((size_t)0); // J(0)=0
@@ -36,17 +35,17 @@ std::vector<size_t> PmergeMe::generateJacobstahl(size_t n) const {
     J.push_back((size_t)1); // J(1)=1
     for (size_t i = 2; i <= n; ++i) {
         size_t val = J[i - 1] + 2 * J[i - 2];
-        if (val > n) break; // 必要に応じて終了条件を調整
+        if (val > n) break;
         J.push_back(val);
     }
     return J;
 }
 
-// smallリストに挿入する位置を決定する
+// smallリストに挿入する位置を決定
 template <typename Container, typename T>
 typename Container::iterator PmergeMe::insertionPosition(Container &c, const T &val) {
-    // コンテナが空の場合は最初に挿入
-    if (c.empty()) return c.begin();
+    if (c.empty()) 
+        return c.begin();
     
     size_t size = c.size();
 
@@ -61,22 +60,19 @@ typename Container::iterator PmergeMe::insertionPosition(Container &c, const T &
     // 例えば、c[J[i]]とvalを比較し、valが大きければlowを更新、小さければhighを更新。
     for (size_t i = 0; i < J.size(); ++i) {
         size_t idx = J[i];
-        if (idx >= size) break; // 範囲外なら終了
+        if (idx >= size) break;
 
         const T &midVal = c[idx];
         if (midVal == val) {
             // 同値ならidx位置
             return c.begin() + idx;
         } else if (midVal < val) {
-            // valがもっと右にある
             low = idx + 1;
         } else {
-            // valはidx未満の位置
             high = idx;
             break;
         }
     }
-
     // Jacobstahlによる探索でlow～highに範囲が絞られたので、
     // その範囲内で通常の二分探索を行う
     if (low < high) {
@@ -104,65 +100,46 @@ void PmergeMe::fordJohnsonSort(Container &container) {
     typename Container::iterator it = container.begin();
     while (it != container.end()) {
         typename Container::value_type first = *it++;
-        typename Container::value_type second = (it != container.end()) ? *it++ : first;
+        typename Container::value_type second;
+        if (it != container.end()) {
+            second = *it++;
+        } else {
+            // 奇数個の場合、最後の要素を`p_list`に追加
+            p_list.push_back(first);
+            break;
+        }
         
         if (first > second) std::swap(first, second);
         p_list.push_back(first);
         q_list.push_back(second);
     }
 
-    std::cout << "1. p_list after sorting: ";
-    for (typename Container::iterator it = p_list.begin(); it != p_list.end(); ++it) {
-    std::cout << *it << " ";
-    }
-    std::cout << "\n1. q_list before insertion: ";
-    for (typename Container::iterator it = q_list.begin(); it != q_list.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
-
-
-
     // Step 2: `p_list`を再帰的にソート
     fordJohnsonSort(p_list);
-    std::cout << "2. p_list after sorting: ";
-    for (typename Container::iterator it = p_list.begin(); it != p_list.end(); ++it) {
-    std::cout << *it << " ";
-    }
-    std::cout << "\n2. q_list before insertion: ";
-    for (typename Container::iterator it = q_list.begin(); it != q_list.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
 
     // Step 3:  q_listをJacobstahl数列の順序で挿入
     size_t q_size = q_list.size();
     std::vector<size_t> J = generateJacobstahl(q_size);
 
     // `Jacobstahl`数列でインデックスを管理しつつ、要素を挿入
+    std::vector<bool> inserted(q_size, false);
     for (size_t i = 0; i < J.size(); ++i) {
         size_t idx = J[i];
-        if (idx >= q_size) break;
-        typename Container::iterator pos = insertionPosition(p_list, q_list[idx]);
-        p_list.insert(pos, q_list[idx]);
+        if (idx < q_size && !inserted[idx]) {
+            typename Container::iterator pos = insertionPosition(p_list, q_list[idx]);
+            p_list.insert(pos, q_list[idx]);
+            inserted[idx] = true;
+        };
     }
 
-    // 残りの要素を順に挿入（`Jacobstahl`数列でカバーされなかった場合）
+    // 残りの要素を順に挿入
     for (size_t i = 0; i < q_size; ++i) {
-        if (std::find(J.begin(), J.end(), i) == J.end()) {
+        if (!inserted[i]) {
             typename Container::iterator pos = insertionPosition(p_list, q_list[i]);
             p_list.insert(pos, q_list[i]);
         }
     }
-    std::cout << "3. p_list after sorting: ";
-    for (typename Container::iterator it = p_list.begin(); it != p_list.end(); ++it) {
-    std::cout << *it << " ";
-    }
-    std::cout << "\n3. q_list before insertion: ";
-    for (typename Container::iterator it = q_list.begin(); it != q_list.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
+
     container = p_list;
 }
 

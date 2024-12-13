@@ -4,6 +4,10 @@
 #include <vector>
 #include <deque>
 #include <ctime>
+#include <stdexcept>
+#include <climits>
+#include <cstdlib>
+
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -16,7 +20,17 @@ int main(int argc, char **argv) {
         std::deque<int> deqInput;
 
         for (int i = 1; i < argc; ++i) {
-            int num = std::atoi(argv[i]);
+            char *endptr;
+            long num = std::strtol(argv[i], &endptr, 10);
+
+            if (*endptr != '\0') {
+                throw std::invalid_argument(std::string("Error: Invalid number: ") + argv[i]);
+            }
+
+            if (num > INT_MAX || num < INT_MIN) {
+                throw std::out_of_range(std::string("Error: Number out of range: ") + argv[i]);
+            }
+
             if (num <= 0) {
                 throw std::invalid_argument("Error: All numbers must be positive");
             }
